@@ -1,0 +1,79 @@
+<script type="text/javascript">
+    RED
+        .nodes
+        .registerType('elastic-search', {
+            category: 'elasticsearch',
+            defaults: {
+                confignode: {
+                    value: "",
+                    type: "elastic-config",
+                    required: true
+                },
+                query:{
+                    value: ""
+                },
+                querytype:{
+                    value: ""
+                },
+                index:{
+                    value: ""
+                },
+                timerangeFrom:{
+                    value: ""
+                },
+                timerangeTo:{
+                    value: ""
+                }
+            },
+            inputs: 1,
+            outputs: 1,
+            color: "#FFFFFF",
+            label: function () {
+                if (this.name) {
+                    return this.name;
+                } else if (this.confignode.name) {
+                    return this.confignode.name;
+                }
+                return "elastic search";
+            },
+            icon: "elasticsearch.png",
+            paletteLabel: "search",
+            oneditprepare: function () {
+                var node = this;
+
+                $('#node-input-confignode').change(function () {
+                    var config = $('#node-input-confignode').val()
+                    node.confignode = config;
+                });
+
+                $("#node-input-query").typedInput({
+                    types: ["msg", "json"],
+                    typeField: "#node-input-querytype"
+                });
+            }
+        });
+</script>
+
+<script type="text/x-red" data-template-name="elastic-search">
+    <div class="form-row">
+        <label for="node-input-confignode"><i class="fa fa-globe"></i> <span>Config</span></label>
+        <input type="text" id="node-input-confignode">
+    </div>  
+    <div class="form-row">
+        <label for="node-input-query"><i class="fa fa-globe"></i> <span>Query</span></label>
+        <input type="text" id="node-input-query">
+        <input type="text" id="node-input-querytype">
+    </div>  
+    <div class="form-row">
+        <label for="node-input-index"><i class="fa fa-globe"></i> <span>Index</span></label>
+        <input type="text" id="node-input-index">        
+    </div>  
+    <div class="form-row">
+        <label for="node-input-timerangeFrom"><i class="fa fa-globe"></i> <span>Time range</span></label>
+        <input type="text" id="node-input-timerangeFrom" style="width:100px"> - <input type="text" id="node-input-timerangeTo"  style="width:100px">        
+    </div> 
+</script>
+
+<script type="text/x-red" data-help-name="elastic-search">
+
+</script>

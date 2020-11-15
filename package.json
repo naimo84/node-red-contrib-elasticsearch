@@ -1,0 +1,151 @@
+{
+  "name": "@naimo84/node-red-contrib-elasticsearch",
+  "version": "0.0.1",
+  "description": "NodeRed Elasticsearch Node",
+  "author": {
+    "name": "naimo84",
+    "email": "git@naimo84.dev"
+  },
+  "contributors": [
+    {
+      "name": "naimo84",
+      "email": "git@naimo84.dev"
+    }
+  ],
+  "homepage": "https://github.com/naimo84/node-red-contrib-elasticsearch",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/naimo84/node-red-contrib-elasticsearch/blob/master/LICENSE"
+    }
+  ],
+  "keywords": [
+    "node-red",
+    "Smart Home",
+    "home automation"
+  ],
+  "node-red": {
+    "nodes": {
+      "elastic-config": "dist/elastic-config.js",
+      "elastic-search": "dist/elastic-search.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naimo84/node-red-contrib-elasticsearch"
+  },
+  "scripts": {
+    "start": "gulp && node-red",
+    "release": "standard-version",
+    "release-minor": "standard-version --release-as minor",
+    "dev": "gulp develop",
+    "build": "gulp"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint --edit"
+    }
+  },
+  "funding": {
+    "type": "paypal",
+    "url": "https://paypal.me/NeumannBenjamin"
+  },
+  "dependencies": {
+    "cloneextend": "0.0.3",
+    "debug": "^4.1.1",
+    "events": "^3.1.0",
+    "lodash": "^4.17.15",
+    "request": "^2.88.2",
+    "elasticsearch": "^16.7.1",
+    "request-promise-native": "1.0.8"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.28",
+    "@types/node-red": "^0.20.1",
+    "commitlint": "^8.3.5",
+    "gulp": "^4.0.2",
+    "gulp-nodemon": "^2.4.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
+    "gulp-watch": "^5.0.1",
+    "husky": "3.1.0",
+    "mocha": "6.2.2",
+    "node-red": "1.0.2",
+    "node-red-node-test-helper": "^0.2.3",
+    "nodemon": "^1.19.4",
+    "should": "13.2.3",
+    "standard-version": "^7.1.0",
+    "typescript": "^3.8.2"
+  },
+  "commitlint": {
+    "format": {
+      "helpUrl": "test"
+    },
+    "rules": {
+      "body-leading-blank": [
+        1,
+        "always"
+      ],
+      "footer-leading-blank": [
+        1,
+        "always"
+      ],
+      "header-max-length": [
+        2,
+        "always",
+        72
+      ],
+      "scope-case": [
+        2,
+        "always",
+        "lower-case"
+      ],
+      "subject-case": [
+        2,
+        "never",
+        [
+          "sentence-case",
+          "start-case",
+          "pascal-case",
+          "upper-case"
+        ]
+      ],
+      "subject-empty": [
+        2,
+        "never"
+      ],
+      "subject-full-stop": [
+        2,
+        "never",
+        "."
+      ],
+      "type-case": [
+        2,
+        "always",
+        "lower-case"
+      ],
+      "type-empty": [
+        2,
+        "never"
+      ],
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "chore",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "revert",
+          "style",
+          "test"
+        ]
+      ]
+    }
+  }
+}
