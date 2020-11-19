@@ -57,14 +57,6 @@
                     typeField: "#node-input-querytype"
                 });
 
-
-
-
-
-
-
-
-
                 var buildEditor = function (id, value, defaultValue) {
                     var editor = RED.editor.createEditor({
                         id: id,
@@ -124,7 +116,7 @@
                     delete node[editorName];
                     $("#" + targetName).val(val);
                 }
-                disposeEditor("editor", "node-input-func");              
+                disposeEditor("editor", "node-input-func");
                 $("#node-input-noerr").val(noerr);
                 this.noerr = noerr;
 
@@ -137,6 +129,13 @@
         .elastic label {
             min-width: 130px
         }        
+        .elastic.node-text-editor-row label {
+            min-width: 195px
+        }        
+       
+        #func-tab-body {
+           padding-top: 20px;
+       }
     </style>  
 
     <div class="form-row elastic">
@@ -171,7 +170,7 @@
         <input type="text" id="node-input-size">        
     </div>  
     <div class="form-row elastic">
-        <label for="node-input-outputalways">   <i class="fa fa-globe"></i>  <span>Output always</span>      </label>
+       <label for="node-input-outputalways">   <i class="fa fa-globe"></i>  <span>Output always</span>      </label>
       <input type="checkbox" id="node-input-outputalways" style="width:14px">
     </div>  
    
@@ -182,13 +181,17 @@
 
  
 
-    <div id="func-tab-body">
+    <div id="func-tab-body ">
         <div class="form-row" style="margin-bottom: 0px;">
             <input type="hidden" id="node-input-func" autofocus="autofocus">
             <input type="hidden" id="node-input-noerr">
         </div>
 
-        <div class="form-row node-text-editor-row" style="position:relative">
+        <div class="elastic form-row node-text-editor-row" style="position:relative">
+            <span style="position: absolute; left:0; bottom: calc(100% + 3px);">
+                <label for="node-input-func-editor"  >   <i class="fa fa-globe"></i>  <span>Formated output function</span>      </label>
+                <input type="checkbox" id="node-input-formattedoutput" style="width:14px">
+            </span>
             <div style="position: absolute; right:0; bottom: calc(100% + 3px);"><button id="node-function-expand-js" class="red-ui-button red-ui-button-small"><i class="fa fa-expand"></i></button></div>
             <div style="height: 220px; min-height:120px; margin-top: 30px;" class="node-text-editor" id="node-input-func-editor" ></div>
         </div>
