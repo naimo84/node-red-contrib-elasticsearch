@@ -9,19 +9,25 @@
                     type: "elastic-config",
                     required: true
                 },
-                query:{
+                query: {
                     value: ""
                 },
-                querytype:{
+                querytype: {
                     value: ""
                 },
-                index:{
+                index: {
                     value: ""
                 },
-                timerangeFrom:{
+                timerangeFrom: {
                     value: ""
                 },
-                timerangeTo:{
+                timerangeTo: {
+                    value: ""
+                },
+                outputalways: {
+                    value: false
+                },
+                func: {
                     value: ""
                 }
             },
@@ -50,29 +56,107 @@
                     types: ["msg", "json"],
                     typeField: "#node-input-querytype"
                 });
-            }
+
+
+
+
+
+
+
+
+
+                var buildEditor = function (id, value, defaultValue) {
+                    var editor = RED.editor.createEditor({
+                        id: id,
+                        mode: 'ace/mode/nrjavascript',
+                        value: value || defaultValue || "",
+                        globals: {
+                            msg: true,
+                            context: true,
+                            RED: true,
+                            util: true,
+                            flow: true,
+                            global: true,
+                            console: true,
+                            Buffer: true,
+                            setTimeout: true,
+                            clearTimeout: true,
+                            setInterval: true,
+                            clearInterval: true
+                        }
+                    });
+                    if (defaultValue && value === "") {
+                        editor.moveCursorTo(defaultValue.split("\n").length - 1, 0);
+                    }
+                    return editor;
+                }
+
+                this.editor = buildEditor('node-input-func-editor', $("#node-input-func").val())
+                RED.library.create({
+                    url: "functions", // where to get the data from
+                    type: "function", // the type of object the library is for
+                    editor: this.editor, // the field name the main text body goes to
+                    mode: "ace/mode/nrjavascript",
+                    ext: "js"
+                });
+            },
+            oneditsave: function () {
+                var node = this;
+                var noerr = 0;
+                $("#node-input-noerr").val(0);
+
+                var disposeEditor = function (editorName, targetName, defaultValue) {
+                    var editor = node[editorName];
+                    var annot = editor.getSession().getAnnotations();
+                    for (var k = 0; k < annot.length; k++) {
+                        if (annot[k].type === "error") {
+                            noerr += annot.length;
+                            break;
+                        }
+                    }
+                    var val = editor.getValue();
+                    if (defaultValue) {
+                        if (val.trim() == defaultValue.trim()) {
+                            val = "";
+                        }
+                    }
+                    editor.destroy();
+                    delete node[editorName];
+                    $("#" + targetName).val(val);
+                }
+                disposeEditor("editor", "node-input-func");              
+                $("#node-input-noerr").val(noerr);
+                this.noerr = noerr;
+
+            },
         });
 </script>
 
 <script type="text/x-red" data-template-name="elastic-search">
-    <div class="form-row">
+    <style>
+        .elastic label {
+            min-width: 130px
+        }        
+    </style>  
+
+    <div class="form-row elastic">
         <label for="node-input-confignode"><i class="fa fa-globe"></i> <span>Config</span></label>
         <input type="text" id="node-input-confignode">
     </div>  
-    <div class="form-row">
+    <div class="form-row elastic">
         <label for="node-input-query"><i class="fa fa-globe"></i> <span>Query</span></label>
         <input type="text" id="node-input-query" style="width: 70%">
         <input type="text" id="node-input-querytype">
     </div>  
-    <div class="form-row">
+    <div class="form-row elastic">
         <label for="node-input-index"><i class="fa fa-globe"></i> <span>Index</span></label>
         <input type="text" id="node-input-index">        
     </div>  
-    <div class="form-row">
+    <div class="form-row elastic">
         <label for="node-input-timerangeFrom"><i class="fa fa-globe"></i> <span>Time range</span></label>
         <input type="text" id="node-input-timerangeFrom" style="width:100px" placeholder="now-1h"> - <input type="text" id="node-input-timerangeTo"  style="width:100px" placeholder="now">        
     </div> 
-    <div class="form-row" id="delay-details-for">
+    <div class="form-row elastic" id="delay-details-for">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span>Check every</span></label>
         <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">
         <select id="node-input-timeoutUnits" style="width:200px !important">          
@@ -82,10 +166,33 @@
           <option value="days">Days</option>
         </select>
     </div>
-    <div class="form-row">
-        <label for="node-input-index"><i class="fa fa-globe"></i> <span>Size</span></label>
-        <input type="text" id="node-input-index">        
+    <div class="form-row elastic">
+        <label for="node-input-size"><i class="fa fa-globe"></i> <span>Size</span></label>
+        <input type="text" id="node-input-size">        
     </div>  
+    <div class="form-row elastic">
+        <label for="node-input-outputalways">   <i class="fa fa-globe"></i>  <span>Output always</span>      </label>
+      <input type="checkbox" id="node-input-outputalways" style="width:14px">
+    </div>  
+   
+
+
+
+
+
+ 
+
+    <div id="func-tab-body">
+        <div class="form-row" style="margin-bottom: 0px;">
+            <input type="hidden" id="node-input-func" autofocus="autofocus">
+            <input type="hidden" id="node-input-noerr">
+        </div>
+
+        <div class="form-row node-text-editor-row" style="position:relative">
+            <div style="position: absolute; right:0; bottom: calc(100% + 3px);"><button id="node-function-expand-js" class="red-ui-button red-ui-button-small"><i class="fa fa-expand"></i></button></div>
+            <div style="height: 220px; min-height:120px; margin-top: 30px;" class="node-text-editor" id="node-input-func-editor" ></div>
+        </div>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="elastic-search">
