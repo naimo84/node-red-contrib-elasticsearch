@@ -232,12 +232,12 @@ module.exports = function (RED: Red) {
 
 
         node.on('input', async (msg, send, done) => {
+           await search(node, msg)
             context.msg = msg;
             context.send = send;
             context.done = done;
             node.script.runInContext(context);
             sendResults(this, send, msg._msgid, context.results, false);
-            search(node, msg)
         })
     }
 
@@ -290,14 +290,13 @@ module.exports = function (RED: Red) {
                 }
             }
             if (node.outputalways || result.hits.total.value > 0)
-                node.send({
-                    payload: {
-                        index: node.index,
-                        query: node.query,
-                        total: result.hits.total.value,
-                        items: hits
-                    }
-                });
+                msg.payload = {
+                    index: node.index,
+                    query: node.query,
+                    total: result.hits.total.value,
+                    items: hits
+                }
+
 
         } catch (e) {
             console.error(e);
