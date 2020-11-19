@@ -61,7 +61,7 @@
     </div>  
     <div class="form-row">
         <label for="node-input-query"><i class="fa fa-globe"></i> <span>Query</span></label>
-        <input type="text" id="node-input-query">
+        <input type="text" id="node-input-query" style="width: 70%">
         <input type="text" id="node-input-querytype">
     </div>  
     <div class="form-row">
@@ -70,8 +70,22 @@
     </div>  
     <div class="form-row">
         <label for="node-input-timerangeFrom"><i class="fa fa-globe"></i> <span>Time range</span></label>
-        <input type="text" id="node-input-timerangeFrom" style="width:100px"> - <input type="text" id="node-input-timerangeTo"  style="width:100px">        
+        <input type="text" id="node-input-timerangeFrom" style="width:100px" placeholder="now-1h"> - <input type="text" id="node-input-timerangeTo"  style="width:100px" placeholder="now">        
     </div> 
+    <div class="form-row" id="delay-details-for">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span>Check every</span></label>
+        <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">
+        <select id="node-input-timeoutUnits" style="width:200px !important">          
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-index"><i class="fa fa-globe"></i> <span>Size</span></label>
+        <input type="text" id="node-input-index">        
+    </div>  
 </script>
 
 <script type="text/x-red" data-help-name="elastic-search">

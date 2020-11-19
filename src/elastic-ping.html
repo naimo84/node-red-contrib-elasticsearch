@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    RED
+        .nodes
+        .registerType('elastic-ping', {
+            category: 'elasticsearch',
+            defaults: {
+                confignode: {
+                    value: "",
+                    type: "elastic-config",
+                    required: true
+                },              
+            },
+            inputs: 1,
+            outputs: 1,
+            color: "#FFFFFF",
+            label: function () {
+                if (this.name) {
+                    return this.name;
+                } else if (this.confignode.name) {
+                    return this.confignode.name;
+                }
+                return "elastic ping";
+            },
+            icon: "elasticsearch.png",
+            paletteLabel: "ping",
+            oneditprepare: function () {
+                var node = this;
+
+                $('#node-input-confignode').change(function () {
+                    var config = $('#node-input-confignode').val()
+                    node.confignode = config;
+                });
+            }
+        });
+</script>
+
+<script type="text/x-red" data-template-name="elastic-ping">
+    <div class="form-row">
+        <label for="node-input-confignode"><i class="fa fa-globe"></i> <span>Config</span></label>
+        <input type="text" id="node-input-confignode">
+    </div>  
+    
+    <div class="form-row" id="delay-details-for">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span>Check every</span></label>
+        <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">
+        <select id="node-input-timeoutUnits" style="width:200px !important">          
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="elastic-ping">
+
+</script>
