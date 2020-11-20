@@ -1,7 +1,7 @@
 
 import { Red } from 'node-red';
 import { createSandbox, sendResults } from './sandbox';
-const handlebars = require('handlebars');
+
 module.exports = function (RED: Red) {
 
     function templateNode(config: any) {
@@ -21,7 +21,7 @@ module.exports = function (RED: Red) {
         node.timerangeFrom = config.timerangeFrom || 'now-1h';
         node.timerangeTo = config.timerangeTo || 'now';
         node.func = config.func;
-        node.funccompiled = handlebars.compile(node.func);
+       
         let context = createSandbox(node, RED);
 
         node.on('input', async (msg, send, done) => {

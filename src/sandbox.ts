@@ -1,11 +1,11 @@
 var util = require("util");
 var vm = require("vm");
-
+const handlebars = require('handlebars');
 export function createSandbox(node, RED) {
     let func = node.func;
 
     if (!func.includes('return')) {
-        func = 'return ' + func;
+        func = `return { payload: ${func} }`;
     }
 
     var functionText = "var results = null;" +
@@ -186,8 +186,9 @@ export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED,con
             }
             for (var n = 0; n < msgs[m].length; n++) {
                 var msg = msgs[m][n];
-                let results = node.funccompiled({ msg: context.msg })
-                console.log(results);
+                let funccompiled = handlebars.compile(msg.payload);
+                let result = funccompiled({ msg: context.msg })
+                msg.payload=result;
                 if (msg !== null && msg !== undefined) {
                     if (typeof msg === 'object' && !Buffer.isBuffer(msg) && !util.isArray(msg)) {
                         if (msgCount === 0 && cloneFirstMessage !== false) {
