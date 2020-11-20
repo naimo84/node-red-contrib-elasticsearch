@@ -1,14 +1,8 @@
 
-import { Red, Node } from 'node-red';
+import { Red } from 'node-red';
 import { createSandbox, sendResults } from './sandbox';
-const { Client } = require('elasticsearch')
-
+const handlebars = require('handlebars');
 module.exports = function (RED: Red) {
-
-    var util = require("util");
-    var vm = require("vm");
-
-    
 
     function templateNode(config: any) {
         RED.nodes.createNode(this, config);
@@ -19,8 +13,6 @@ module.exports = function (RED: Red) {
         }
         let node = this;
 
-
-
         node.config = configNode;
         node.query = config.query;
         node.index = config.index;
@@ -29,19 +21,19 @@ module.exports = function (RED: Red) {
         node.timerangeFrom = config.timerangeFrom || 'now-1h';
         node.timerangeTo = config.timerangeTo || 'now';
         node.func = config.func;
-
-        
-
-        let context = createSandbox(node,RED);
-
+        node.funccompiled = handlebars.compile(node.func);
+        let context = createSandbox(node, RED);
 
         node.on('input', async (msg, send, done) => {
-           await search(node, msg)
+            await search(node, msg)
             context.msg = msg;
             context.send = send;
             context.done = done;
+            let results = node.funccompiled({msg:msg})
+            console.log(results);
+            
             node.script.runInContext(context);
-            sendResults(this, send, msg._msgid, context.results, false,RED);
+            sendResults(this, send, msg._msgid, context.results, false, RED);
         })
     }
 
@@ -100,7 +92,6 @@ module.exports = function (RED: Red) {
                     total: result.hits.total.value,
                     items: hits
                 }
-
 
         } catch (e) {
             console.error(e);

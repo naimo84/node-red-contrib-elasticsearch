@@ -22,8 +22,6 @@ export function createSandbox(node, RED) {
         node.func + "\n" +
         "})(msg,send,done);";
 
-
-
     var sandbox = {
         console: console,
         util: util,
