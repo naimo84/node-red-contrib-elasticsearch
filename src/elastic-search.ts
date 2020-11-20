@@ -29,11 +29,10 @@ module.exports = function (RED: Red) {
             context.msg = msg;
             context.send = send;
             context.done = done;
-            let results = node.funccompiled({msg:msg})
-            console.log(results);
+            
             
             node.script.runInContext(context);
-            sendResults(this, send, msg._msgid, context.results, false, RED);
+            sendResults(this, send, msg._msgid, context.results, false, RED,context);
         })
     }
 

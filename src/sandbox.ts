@@ -2,6 +2,11 @@ var util = require("util");
 var vm = require("vm");
 
 export function createSandbox(node, RED) {
+    let func = node.func;
+
+    if (!func.includes('return')) {
+        func = 'return ' + func;
+    }
 
     var functionText = "var results = null;" +
         "results = (function(msg,__send__,__done__){ " +
@@ -19,7 +24,7 @@ export function createSandbox(node, RED) {
         "send:function(msgs,cloneMsg){ __node__.send(__send__,__msgid__,msgs,cloneMsg);}," +
         "done:__done__" +
         "};\n" +
-        node.func + "\n" +
+        func + "\n" +
         "})(msg,send,done);";
 
     var sandbox = {
@@ -49,7 +54,7 @@ export function createSandbox(node, RED) {
                 node.trace.apply(node, arguments);
             },
             send: function (send, id, msgs, cloneMsg) {
-                sendResults(node, send, id, msgs, cloneMsg, RED);
+                sendResults(node, send, id, msgs, cloneMsg, RED,this);
             },
             on: function () {
                 if (arguments[0] === "input") {
@@ -166,7 +171,8 @@ export function createSandbox(node, RED) {
     return context;
 }
 
-export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED) {
+export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED,context) {
+
     if (msgs == null) {
         return;
     } else if (!util.isArray(msgs)) {
@@ -180,6 +186,8 @@ export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED) {
             }
             for (var n = 0; n < msgs[m].length; n++) {
                 var msg = msgs[m][n];
+                let results = node.funccompiled({ msg: context.msg })
+                console.log(results);
                 if (msg !== null && msg !== undefined) {
                     if (typeof msg === 'object' && !Buffer.isBuffer(msg) && !util.isArray(msg)) {
                         if (msgCount === 0 && cloneFirstMessage !== false) {
