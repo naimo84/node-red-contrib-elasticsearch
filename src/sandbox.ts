@@ -4,6 +4,9 @@ const handlebars = require('handlebars');
 export function createSandbox(node, RED) {
     let func = node.func;
 
+    if (func.length === 0) {
+        func = `return { payload: msg.payload }`
+    }
     if (!func.includes('return')) {
         func = `return { payload: ${func} }`;
     }
@@ -54,7 +57,7 @@ export function createSandbox(node, RED) {
                 node.trace.apply(node, arguments);
             },
             send: function (send, id, msgs, cloneMsg) {
-                sendResults(node, send, id, msgs, cloneMsg, RED,this);
+                sendResults(node, send, id, msgs, cloneMsg, RED, this);
             },
             on: function () {
                 if (arguments[0] === "input") {
@@ -171,7 +174,7 @@ export function createSandbox(node, RED) {
     return context;
 }
 
-export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED,context) {
+export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED, context) {
 
     if (msgs == null) {
         return;
@@ -186,9 +189,11 @@ export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED,con
             }
             for (var n = 0; n < msgs[m].length; n++) {
                 var msg = msgs[m][n];
-                let funccompiled = handlebars.compile(msg.payload);
-                let result = funccompiled({ msg: context.msg })
-                msg.payload=result;
+                if (typeof (msg.payload) === "string") {
+                    let funccompiled = handlebars.compile(msg.payload);
+                    let result = funccompiled({ msg: context.msg })
+                    msg.payload = result;
+                }
                 if (msg !== null && msg !== undefined) {
                     if (typeof msg === 'object' && !Buffer.isBuffer(msg) && !util.isArray(msg)) {
                         if (msgCount === 0 && cloneFirstMessage !== false) {
