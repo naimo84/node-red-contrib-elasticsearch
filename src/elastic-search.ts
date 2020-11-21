@@ -126,7 +126,7 @@ module.exports = function (RED: Red) {
             
             
             node.script.runInContext(context);
-            sendResults(this, send, msg._msgid, context.results, false, RED,context);
+            sendResults(node, send, msg._msgid, context.results, false, RED,context);
 
         } catch (e) {
             console.error(e);
