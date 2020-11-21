@@ -1,6 +1,7 @@
 
 import { Red } from 'node-red';
 import { createSandbox, sendResults } from './sandbox';
+import { CronJob } from 'cron';
 
 module.exports = function (RED: Red) {
 
@@ -24,21 +25,48 @@ module.exports = function (RED: Red) {
        
         let context = createSandbox(node, RED);
 
+
+        if (config.timeout && config.timeout !== "" && config.timeoutUnits && config.timeoutUnits !== "") {
+            let cron = '0 0 * * * *';
+
+            switch (config.timeoutUnits) {
+                case 'seconds':
+                    cron = `*/${config.timeout} * * * * *`;
+                    break;
+                case 'minutes':
+                    cron = `0 */${config.timeout} * * * *`;
+                    break;
+                case 'hours':
+                    cron = `0 0 */${config.timeout} * * *`;
+                    break;
+                case 'days':
+                    cron = `0 0 0 */${config.timeout} * *`;
+                    break;
+                default:
+                    break;
+            }
+            node.job = new CronJob(cron, search.bind(null, node, null,context,node.send,null));
+            node.job.start();
+
+            node.on('close', () => {
+                node.job.stop();
+            });
+        }
+
+
+
         node.on('input', async (msg, send, done) => {
-            await search(node, msg)
-            context.msg = msg;
-            context.send = send;
-            context.done = done;
+            await search(node, msg,context,send,done)
             
-            
-            node.script.runInContext(context);
-            sendResults(this, send, msg._msgid, context.results, false, RED,context);
         })
     }
 
 
-    async function search(node, msg) {
+    async function search(node, msg, context,send,done) {
         try {
+            if(!msg){
+                msg={payload:{}}
+            }
             let elastic_query = {
                 bool: {
                     must: [
@@ -91,6 +119,14 @@ module.exports = function (RED: Red) {
                     total: result.hits.total.value,
                     items: hits
                 }
+
+            context.msg = msg;
+            context.send = send;
+            context.done = done;
+            
+            
+            node.script.runInContext(context);
+            sendResults(this, send, msg._msgid, context.results, false, RED,context);
 
         } catch (e) {
             console.error(e);

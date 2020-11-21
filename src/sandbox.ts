@@ -216,6 +216,6 @@ export function sendResults(node, send, _msgid, msgs, cloneFirstMessage, RED, co
         }
     }
     if (msgCount > 0) {
-        send(msgs);
+        send(msgs[0][0]);
     }
 }

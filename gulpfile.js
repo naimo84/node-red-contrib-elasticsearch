@@ -28,7 +28,6 @@ gulp.task('develop', function (done) {
     var stream = nodemon({
         legacyWatch:true,
         ext: '*.js',
-        watch: [paths.dist],
         ignore: ["*.map"],
         done: done,        
         verbose: true
@@ -40,6 +39,7 @@ gulp.task('develop', function (done) {
         stream.emit('restart', 100)
     });
 
+   
     stream
         .on('restart', function () {
             console.log('restarted!')

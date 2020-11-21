@@ -24,6 +24,12 @@
                 timerangeTo: {
                     value: ""
                 },
+                timeout: {
+                    value: ""
+                },
+                timeoutUnits: {
+                    value: ""
+                },
                 outputalways: {
                     value: false
                 },
@@ -46,7 +52,17 @@
             paletteLabel: "search",
             oneditprepare: function () {
                 var node = this;
+                $("#node-input-timeout").spinner({ min: 1 });
 
+                $('.ui-spinner-button').on("click", function () {
+                    $(this).siblings('input').trigger("change");
+                });
+
+                if (!this.timeoutUnits) {
+                    $("#node-input-timeoutUnits option").filter(function () {
+                        return $(this).val() == 'seconds';
+                    }).attr('selected', true);
+                }
                 $('#node-input-confignode').change(function () {
                     var config = $('#node-input-confignode').val()
                     node.confignode = config;
