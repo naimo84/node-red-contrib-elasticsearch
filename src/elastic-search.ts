@@ -119,10 +119,10 @@ module.exports = function (RED: Red) {
             context.send = send;
             context.done = done;
 
-
             node.script.runInContext(context);
             sendResults(node, send, msg._msgid, context.results, false, RED, context);
-
+            if (done)
+                done();
         } catch (e) {
             console.error(e);
             return {
