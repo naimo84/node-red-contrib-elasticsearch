@@ -22,10 +22,8 @@ module.exports = function (RED: Red) {
         node.timerangeFrom = config.timerangeFrom || 'now-1h';
         node.timerangeTo = config.timerangeTo || 'now';
         node.func = config.func;
-       
+
         let context = createSandbox(node, RED);
-
-
         if (config.timeout && config.timeout !== "" && config.timeoutUnits && config.timeoutUnits !== "") {
             let cron = '0 0 * * * *';
 
@@ -45,7 +43,7 @@ module.exports = function (RED: Red) {
                 default:
                     break;
             }
-            node.job = new CronJob(cron, search.bind(null, node, null,context,node.send,null));
+            node.job = new CronJob(cron, search.bind(null, node, null, context));
             node.job.start();
 
             node.on('close', () => {
@@ -53,19 +51,16 @@ module.exports = function (RED: Red) {
             });
         }
 
-
-
         node.on('input', async (msg, send, done) => {
-            await search(node, msg,context,send,done)
-            
-        })
+            await search(node, msg, context, send, done)
+        });
     }
 
 
-    async function search(node, msg, context,send,done) {
+    async function search(node, msg, context, send, done) {
         try {
-            if(!msg){
-                msg={payload:{}}
+            if (!msg) {
+                msg = { payload: {} }
             }
             let elastic_query = {
                 bool: {
@@ -123,10 +118,10 @@ module.exports = function (RED: Red) {
             context.msg = msg;
             context.send = send;
             context.done = done;
-            
-            
+
+
             node.script.runInContext(context);
-            sendResults(node, send, msg._msgid, context.results, false, RED,context);
+            sendResults(node, send, msg._msgid, context.results, false, RED, context);
 
         } catch (e) {
             console.error(e);
