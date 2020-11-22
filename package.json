@@ -28,7 +28,8 @@
     "nodes": {
       "elastic-config": "dist/elastic-config.js",
       "elastic-search": "dist/elastic-search.js",
-      "elastic-ping": "dist/elastic-ping.js"
+      "elastic-ping": "dist/elastic-ping.js",
+      "elastic-get-index": "dist/elastic-get-index.js"
     }
   },
   "repository": {

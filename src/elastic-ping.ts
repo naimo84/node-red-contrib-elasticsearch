@@ -2,7 +2,7 @@
 import { Red, Node } from 'node-red';
 
 module.exports = function (RED: Red) {
-    function templateNode(config: any) {
+    function elasticNode(config: any) {
         RED.nodes.createNode(this, config);
         let configNode = RED.nodes.getNode(config.confignode);
         if (!configNode) {
@@ -11,39 +11,31 @@ module.exports = function (RED: Red) {
         }
         let node = this;
         node.config = configNode;
-        node.query = config.query;
-        node.index = config.index;
-        node.timerangeFrom = config.timerangeFrom;
-        node.timerangeTo = config.timerangeTo;
 
-
-        node.on('input', async (msg) => {
-            search(node, msg)
+        node.on('input', async (msg, send, done) => {
+            search(node, msg, send, done);
         })
     }
 
 
-    async function search(node, msg) {
-        try {
-
-      
-
+    async function search(node, msg, send, done) {
+        send = send || function () { node.send.apply(node, arguments) }
+        try {           
             const result = await node.config.client.ping()
-           
 
-            node.send({
-                payload:result
+            send({
+                payload: result
             });
-
-        } catch (e) {
-            console.error(e);
-            node.send({
-                payload:false,
-                error:e
-            });
+            if (done) done();
+        } catch (e) {           
+            send({
+                payload: false,
+                error: e
+            });     
+            if (done) done();      
         }
     }
 
 
-    RED.nodes.registerType("elastic-ping", templateNode);
+    RED.nodes.registerType("elastic-ping", elasticNode);
 }
