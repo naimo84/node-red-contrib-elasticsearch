@@ -12,6 +12,54 @@ export interface ElasticSearchNode extends ElasticNode {
     script: any;
 
 }
+
+// Define the type of the body for the Search request
+interface SearchBody {
+    query: {
+        match: { foo: string }
+    }
+}
+
+// Complete definition of the Search response
+interface ShardsResponse {
+    total: number;
+    successful: number;
+    failed: number;
+    skipped: number;
+}
+
+interface Explanation {
+    value: number;
+    description: string;
+    details: Explanation[];
+}
+
+export interface SearchResponse<T> {
+    took: number;
+    timed_out: boolean;
+    _scroll_id?: string;
+    _shards: ShardsResponse;
+    hits: {
+        total: number;
+        max_score: number;
+        hits: Array<{
+            _index: string;
+            _type: string;
+            _id: string;
+            _score: number;
+            _source: T;
+            _version?: number;
+            _explanation?: Explanation;
+            fields?: any;
+            highlight?: any;
+            inner_hits?: any;
+            matched_queries?: string[];
+            sort?: string[];
+        }>;
+    };
+    aggregations?: any;
+}
+
 module.exports = function (RED: Red) {
 
     function templateNode(config: any) {
@@ -107,10 +155,10 @@ module.exports = function (RED: Red) {
                 size: msg.payload.size || node.size || 10
             }
 
-            const result = await node.config.client.search(options)
+            const body = await node.config.client.search<SearchResponse<any>>(options)
             let hits = [];
-            if (result && result.hits) {
-                for (let item of result.hits.hits) {
+            if (body && body.body.hits) {
+                for (let item of body.body.hits.hits) {
                     hits.push(Object.assign({
                         _id: item._id,
                         index: item._index
@@ -118,12 +166,12 @@ module.exports = function (RED: Red) {
                 }
             }
             //@ts-ignore
-            if (node.outputalways || result.hits.total.value > 0)
+            if (node.outputalways || body.body.hits.total.value > 0)
                 msg.payload = {
                     index: node.index,
                     query: node.query,
                     //@ts-ignore
-                    total: result.hits.total.value,
+                    total: body.body.hits.total.value,
                     items: hits
                 }
 
@@ -133,14 +181,14 @@ module.exports = function (RED: Red) {
 
             node.script.runInContext(context);
             sendResults(node, send, msg._msgid, context.results, false, RED, context);
-            if (done)
-                done();
+
         } catch (e) {
-            console.error(e);
-            return {
+            if (done)
+                done(e);
+            sendResults(node, send, msg._msgid, {
                 total: 0,
                 hits: []
-            }
+            }, false, RED, context);
         }
     }
 

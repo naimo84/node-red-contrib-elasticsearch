@@ -1,6 +1,4 @@
-
-let elasticsearch = require("elasticsearch");
-import { Client } from 'elasticsearch'
+import { Client } from '@elastic/elasticsearch'
 import { Node } from 'node-red';
 
 export interface ElasticConfig extends Node {
@@ -12,9 +10,9 @@ export interface ElasticConfig extends Node {
     password: any;
 }
 
-export interface ElasticNode extends Node{
+export interface ElasticNode extends Node {
     config: ElasticConfig;
-     index: any; 
+    index: any;
 }
 
 module.exports = function (RED: any) {
@@ -52,16 +50,16 @@ module.exports = function (RED: any) {
     function createClient(node: ElasticConfig) {
         try {
             if (!node.client) {
-                node.client = new elasticsearch.Client({
-                    hosts: [
-                        node.server
-                    ],
-                    requestTimeout: node.timeout,
-                    apiVersion: node.apiVersion,
+                node.client = new Client({
+                    node: node.server,
                     ssl: {
                         rejectUnauthorized: false
                     },
-                    httpAuth: `${node.username}:${node.password}`
+                    auth: {
+                        username: node.username,
+                        password: node.password
+                    },
+                    requestTimeout: node.timeout
                 });
             }
         } catch (err) {

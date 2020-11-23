@@ -1,6 +1,7 @@
 
 import { Red, Node } from 'node-red';
 import { CronJob } from 'cron';
+import { ElasticNode } from './elastic-config';
 
 module.exports = function (RED: Red) {
     function elasticNode(config: any) {
@@ -46,11 +47,11 @@ module.exports = function (RED: Red) {
     }
 
 
-    async function search(node, msg, send, done) {
+    async function search(node: ElasticNode, msg, send, done) {
+        
         send = send || function () { node.send.apply(node, arguments) }
         try {           
-            const result = await node.config.client.ping()
-
+            const result = await node.config.client.ping({})
             send({
                 payload: result
             });
