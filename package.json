@@ -53,6 +53,7 @@
     "url": "https://paypal.me/NeumannBenjamin"
   },
   "dependencies": {
+    "@types/elasticsearch": "^5.0.36",
     "cloneextend": "0.0.3",
     "debug": "^4.1.1",
     "elasticsearch": "^16.7.1",

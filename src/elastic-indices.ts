@@ -1,6 +1,7 @@
 
 import { Red, Node } from 'node-red';
 import { CronJob } from 'cron';
+import { ElasticNode } from './elastic-config';
 
 module.exports = function (RED: Red) {
     function templateNode(config: any) {
@@ -47,7 +48,7 @@ module.exports = function (RED: Red) {
     }
 
 
-    async function search(node, msg, send, done) {
+    async function search(node: ElasticNode, msg: any, send, done) {
         send = send || function () { node.send.apply(node, arguments) }
         try {
             const result = await node.config.client.indices.get({

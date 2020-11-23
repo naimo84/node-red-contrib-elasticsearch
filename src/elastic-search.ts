@@ -2,7 +2,16 @@
 import { Red } from 'node-red';
 import { createSandbox, sendResults } from './sandbox';
 import { CronJob } from 'cron';
+import { ElasticNode } from './elastic-config';
+export interface ElasticSearchNode extends ElasticNode {
+    timerangeFrom: any;
+    timerangeTo: any;
+    query(query: any);
+    size: any;
+    outputalways: boolean;
+    script: any;
 
+}
 module.exports = function (RED: Red) {
 
     function templateNode(config: any) {
@@ -57,7 +66,7 @@ module.exports = function (RED: Red) {
     }
 
 
-    async function search(node, msg, context, send, done) {
+    async function search(node: ElasticSearchNode, msg, context, send, done) {
         try {
             if (!msg) {
                 msg = { payload: {} }
@@ -76,6 +85,7 @@ module.exports = function (RED: Red) {
                 }
             }
 
+            //@ts-ignore
             let query = JSON.parse(node.query);
             if (msg.payload.query) {
                 query = `*${msg.payload.query}*`;
@@ -107,10 +117,12 @@ module.exports = function (RED: Red) {
                     }, item._source))
                 }
             }
+            //@ts-ignore
             if (node.outputalways || result.hits.total.value > 0)
                 msg.payload = {
                     index: node.index,
                     query: node.query,
+                    //@ts-ignore
                     total: result.hits.total.value,
                     items: hits
                 }

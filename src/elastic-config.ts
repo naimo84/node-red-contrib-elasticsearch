@@ -1,5 +1,21 @@
 
 let elasticsearch = require("elasticsearch");
+import { Client } from 'elasticsearch'
+import { Node } from 'node-red';
+
+export interface ElasticConfig extends Node {
+    client: Client;
+    server: any;
+    timeout: any;
+    apiVersion: any;
+    username: any;
+    password: any;
+}
+
+export interface ElasticNode extends Node{
+    config: ElasticConfig;
+     index: any; 
+}
 
 module.exports = function (RED: any) {
 
@@ -33,7 +49,7 @@ module.exports = function (RED: any) {
         });
     }
 
-    function createClient(node) {
+    function createClient(node: ElasticConfig) {
         try {
             if (!node.client) {
                 node.client = new elasticsearch.Client({
