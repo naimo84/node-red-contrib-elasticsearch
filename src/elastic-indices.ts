@@ -3,7 +3,7 @@ import { Red, Node } from 'node-red';
 import { CronJob } from 'cron';
 
 module.exports = function (RED: Red) {
-    function elasticNode(config: any) {
+    function templateNode(config: any) {
         RED.nodes.createNode(this, config);
         let configNode = RED.nodes.getNode(config.confignode);
         if (!configNode) {
@@ -12,6 +12,7 @@ module.exports = function (RED: Red) {
         }
         let node = this;
         node.config = configNode;
+        node.index = config.index;
 
         if (config.timeout && config.timeout !== "" && config.timeoutUnits && config.timeoutUnits !== "") {
             let cron = '0 0 * * * *';
@@ -41,29 +42,32 @@ module.exports = function (RED: Red) {
         }
 
         node.on('input', async (msg, send, done) => {
-            search(node, msg, send, done);
+            search(node, msg, send, done)
         })
     }
 
 
     async function search(node, msg, send, done) {
         send = send || function () { node.send.apply(node, arguments) }
-        try {           
-            const result = await node.config.client.ping()
+        try {
+            const result = await node.config.client.indices.get({
+                index: node.index || '*'
+            })
 
             send({
                 payload: result
             });
-            if (done) done();
-        } catch (e) {           
+            if (done) done()
+        } catch (e) {
             send({
                 payload: false,
                 error: e
-            });     
-            if (done) done();      
+            });
+            if (done) done(e)
+
         }
     }
 
 
-    RED.nodes.registerType("elastic-ping", elasticNode);
+    RED.nodes.registerType("elastic-indices", templateNode);
 }

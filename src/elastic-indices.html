@@ -1,32 +1,27 @@
 <script type="text/javascript">
     RED
         .nodes
-        .registerType('elastic-get-index', {
+        .registerType('elastic-indices', {
             category: 'elasticsearch',
             defaults: {
                 confignode: {
                     value: "",
                     type: "elastic-config",
                     required: true
-                },              
+                },
+                index: {
+                    value: ""
+                },
             },
             inputs: 1,
             outputs: 1,
             color: "#FFFFFF",
-            label: function () {
-                if (this.name) {
-                    return this.name;
-                } else if (this.confignode.name) {
-                    return this.confignode.name;
-                }
-                return "elastic get index";
-            },
+            label: () => this.name || "elastic get indices",
             icon: "elasticsearch.png",
-            paletteLabel: "get index",
-            oneditprepare: function () {
+            paletteLabel: "get indices",
+            oneditprepare: () => {
                 var node = this;
-
-                $('#node-input-confignode').change(function () {
+                $('#node-input-confignode').change(() => {
                     var config = $('#node-input-confignode').val()
                     node.confignode = config;
                 });
@@ -34,12 +29,15 @@
         });
 </script>
 
-<script type="text/x-red" data-template-name="elastic-get-index">
+<script type="text/x-red" data-template-name="elastic-indices">
     <div class="form-row">
         <label for="node-input-confignode"><i class="fa fa-globe"></i> <span>Config</span></label>
         <input type="text" id="node-input-confignode">
     </div>  
-    
+    <div class="form-row elastic">
+        <label for="node-input-index"><i class="fa fa-globe"></i> <span>Index</span></label>
+        <input type="text" id="node-input-index">        
+    </div>  
     <div class="form-row" id="delay-details-for">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span>Check every</span></label>
         <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">
@@ -52,6 +50,6 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="elastic-get-index">
+<script type="text/x-red" data-help-name="elastic-indices">
 
 </script>
