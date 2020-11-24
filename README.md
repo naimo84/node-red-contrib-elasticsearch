@@ -2,6 +2,13 @@
 
 > Node-RED is a tool for wiring together hardware devices, APIs and online services in new and interesting ways.
 
+The initial purpose for this module is to do some alerting with the free/basic version of elasticsearch, because kibana altering, with more options as writing to another index, is only part of the gold and above versions.
+I was trying to use the great elastalert also, but for me it was not working as expected.
+So I decided to implement this node-red module. I know that there are many others out there, unfortunately also not what I was looking for.
+So, here it is: @naimo84/node-red-contrib-elasticsearch
+
+The inital version has only some basic features. For more idea, please open an issue on github. 
+
 ## :question: Get Help
 
  For bug reports and feature requests, open issues. :bug: 
@@ -54,9 +61,38 @@ npm install /path/to/node-red-contrib-elasticsearch
 
 ## :memo: Documentation
 
+
+### configuration:
+
+- name: node-red displayname for config  
+- server: e.g. https://elastic:9200  
+- timeout: default 30000ms  
+
+##### if basic authentication is enabled:  
+- username: e.g. elastic  
+- password : password for user  
 ### node explanation:
 
+## search
 
+- query
+- querytype
+- "index": elastic index to query for 
+- timerangeFrom
+- timerangeTo
+- outputalways
+- function
+- "Check every": how often elasticsearch is checked for new results
+## indices
+
+- "index": elastic index to query for 
+- "Check every": how often elasticsearch is checked for new results
+
+## ping
+
+- "Check every": how often elasticsearch is checked for new results
+
+A simple true/false check, whether elasticsearch is available or not.
 
 ## :scroll: The MIT License
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -31,7 +31,6 @@ module.exports = function (RED: any) {
         } else {
             node.timeout = 30000;
         }
-        node.apiVersion = config.apiVersion;
 
         createClient(node);
 
