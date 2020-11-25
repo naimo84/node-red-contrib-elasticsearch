@@ -10,6 +10,7 @@ export interface ElasticSearchNode extends ElasticNode {
     size: any;
     outputalways: boolean;
     script: any;
+    body: any;
 
 }
 
@@ -72,6 +73,7 @@ module.exports = function (RED: Red) {
         let node = this;
 
         node.config = configNode;
+        node.body = config.body;
         node.query = config.query;
         node.index = config.index;
         node.outputalways = config.outputalways;
@@ -133,26 +135,37 @@ module.exports = function (RED: Red) {
                 }
             }
 
-            //@ts-ignore
-            let query = JSON.parse(node.query);
-            if (msg.payload.query) {
-                query = `*${msg.payload.query}*`;
-            }
-            if (JSON.stringify(query).includes("wildcard")) {
-                elastic_query.bool.must.push(query)
-            } else {
-                elastic_query.bool.must.push({
-                    // @ts-ignore
-                    wildcard: query
-                })
+            if (node.body) {
+                //@ts-ignore
+                let query = JSON.parse(node.body);
+                if (msg.payload.body) {
+                    query = `*${msg.payload.body}*`;
+                }
+                if (JSON.stringify(query).includes("wildcard")) {
+                    elastic_query.bool.must.push(query)
+                } else {
+                    elastic_query.bool.must.push({
+                        // @ts-ignore
+                        wildcard: query
+                    })
 
+                }
             }
             let options: any = {
                 index: node.index,
-                body: {
-                    query: elastic_query
-                },
                 size: msg.payload.size || node.size || 10
+            }
+
+            if (node.query) {
+                options.q = node.query;
+                options.body = {
+                    query: elastic_query
+                }
+            }
+            else if (node.body) {
+                options.body = {
+                    query: elastic_query
+                }
             }
 
             const body = await node.config.client.search<SearchResponse<any>>(options)
@@ -169,7 +182,7 @@ module.exports = function (RED: Red) {
             if (node.outputalways || body.body.hits.total.value > 0)
                 msg.payload = {
                     index: node.index,
-                    query: node.query,
+                    query: node.body,
                     //@ts-ignore
                     total: body.body.hits.total.value,
                     items: hits

@@ -69,8 +69,10 @@ npm install /path/to/node-red-contrib-elasticsearch
 - timeout: default 30000ms  
 
 ##### if basic authentication is enabled:  
+
 - username: e.g. elastic  
 - password : password for user  
+
 ### node explanation:
 
 ## search

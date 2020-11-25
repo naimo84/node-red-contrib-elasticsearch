@@ -9,6 +9,9 @@
                     type: "elastic-config",
                     required: true
                 },
+                body: {
+                    value: ""
+                },
                 query: {
                     value: ""
                 },
@@ -16,6 +19,9 @@
                     value: ""
                 },
                 index: {
+                    value: ""
+                },
+                size: {
                     value: ""
                 },
                 timerangeFrom: {
@@ -68,8 +74,8 @@
                     node.confignode = config;
                 });
 
-                $("#node-input-query").typedInput({
-                    types: ["msg", "json"],
+                $("#node-input-body").typedInput({
+                    types: ["msg", "json", "str"],
                     typeField: "#node-input-querytype"
                 });
 
@@ -143,7 +149,7 @@
 <script type="text/x-red" data-template-name="elastic-search">
     <style>
         .elastic label {
-            min-width: 130px
+            min-width: 110px
         }        
         .elastic.node-text-editor-row label {
             min-width: 195px
@@ -156,11 +162,15 @@
 
     <div class="form-row elastic">
         <label for="node-input-confignode"><i class="fa fa-address-book"></i> <span>Config</span></label>
-        <input type="text" id="node-input-confignode">
-    </div>  
+        <input type="text" id="node-input-confignode">    
+    </div>
     <div class="form-row elastic">
-        <label for="node-input-query"><i class="fa fa-globe"></i> <span>Query</span></label>
+        <label for="node-input-query"><i class="fa fa-globe"></i> <span>Query (q)</span></label>
         <input type="text" id="node-input-query" style="width: 70%">
+    </div>    
+    <div class="form-row elastic">
+        <label for="node-input-body"><i class="fa fa-globe"></i> <span>Full body</span></label>
+        <input type="text" id="node-input-body" style="width: 70%">
         <input type="text" id="node-input-querytype">
     </div>  
     <div class="form-row elastic">
@@ -209,5 +219,18 @@
 </script>
 
 <script type="text/x-red" data-help-name="elastic-search">
+  <h1>Search node</h1>
+<h2>Configuration</h2>
+<ul>
+<li><b>query</b>:</li>
+<li><b>querytype</b>:</li>
+<li><b>"index"</b>: elastic index to query for</li> 
+<li><b>timerangeFrom</b>:</li>
+<li><b>timerangeTo</b>:</li>
+<li><b>outputalways</b>:</li>
+<li><b>function</b>:</li>
+<li><b>"Check every"</b>: how often elasticsearch is checked for new results</li>
+</ul>
+
 
 </script>

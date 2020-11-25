@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
     RED.nodes.registerType('elastic-config', {
         category: 'config',
@@ -7,7 +6,7 @@
             username: { value: '' },
             password: { value: '' },
             server: { value: '' },
-	        timeout: { value: '' }
+            timeout: { value: '' }
         },
         color: "#FFFFFF",
         icon: "elasticsearch.png",
@@ -15,10 +14,20 @@
             return (this.name ? this.name : this.server);
         }
     });
-    </script>
+</script>
 
 <script type="text/x-red" data-help-name="elastic-config">
-    
+    <p>Elasticsearch server config:</p>
+    <ul>
+        <li><b>name</b>: node-red displayname for config</li>
+        <li><b>server</b>: e.g. https://elastic:9200</li>  
+        <li><b>timeout</b>: default 30000ms</li>
+    </ul>
+    <p>if basic authentication is enabled:  </p>
+    <ul>
+        <li><b> username</b>: e.g. elastic  </li>
+            <li><b> password</b> : password for user  </li>
+</ul>
 </script>
 
 <script type="text/x-red" data-template-name="elastic-config">
