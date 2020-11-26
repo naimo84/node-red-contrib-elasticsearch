@@ -73,8 +73,8 @@ module.exports = function (RED: Red) {
         let node = this;
 
         node.config = configNode;
-        node.body = config.body;
-        node.query = config.query;
+        node.body =  config.body && config.body !== "" ? config.body : undefined;
+        node.query = config.query && config.query !== "" ? config.query : undefined;
         node.index = config.index;
         node.outputalways = config.outputalways;
         node.size = config.size;
