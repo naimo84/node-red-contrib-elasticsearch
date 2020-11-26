@@ -6,8 +6,7 @@ export interface ElasticConfig extends Node {
     server: any;
     timeout: any;
     apiVersion: any;
-    username: any;
-    password: any;
+    credentials: any;
 }
 
 export interface ElasticNode extends Node {
@@ -24,8 +23,6 @@ module.exports = function (RED: any) {
 
         node.server = config.server;
         node.name = config.name;
-        node.username = config.username;
-        node.password = config.password;
         if (config.timeout) {
             node.timeout = config.timeout;
         } else {
@@ -55,8 +52,8 @@ module.exports = function (RED: any) {
                         rejectUnauthorized: false
                     },
                     auth: {
-                        username: node.username,
-                        password: node.password
+                        username: node.credentials.username,
+                        password: node.credentials.password
                     },
                     requestTimeout: node.timeout
                 });
@@ -68,5 +65,10 @@ module.exports = function (RED: any) {
 
 
 
-    RED.nodes.registerType("elastic-config", serverConfigNode);
+    RED.nodes.registerType("elastic-config", serverConfigNode, {
+		credentials: {
+			password: { type: 'password' },
+			username: { type: 'text' }
+		}
+	});
 }

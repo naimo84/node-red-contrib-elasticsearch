@@ -3,10 +3,12 @@
         category: 'config',
         defaults: {
             name: { value: '' },
-            username: { value: '' },
-            password: { value: '' },
             server: { value: '' },
             timeout: { value: '' }
+        },
+        credentials: {
+            username: { type: "text" },
+            password: { type: "password" }
         },
         color: "#FFFFFF",
         icon: "elasticsearch.png",
