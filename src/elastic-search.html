@@ -219,18 +219,16 @@
 </script>
 
 <script type="text/x-red" data-help-name="elastic-search">
-  <h1>Search node</h1>
-<h2>Configuration</h2>
-<ul>
-<li><b>query</b>:</li>
-<li><b>querytype</b>:</li>
-<li><b>"index"</b>: elastic index to query for</li> 
-<li><b>timerangeFrom</b>:</li>
-<li><b>timerangeTo</b>:</li>
-<li><b>outputalways</b>:</li>
-<li><b>function</b>:</li>
-<li><b>"Check every"</b>: how often elasticsearch is checked for new results</li>
-</ul>
-
-
+    <h1>Search node</h1>
+    <h2>Configuration</h2>
+    <ul>
+        <li><b>"query"</b>: defines the simple search q parameter of elasticsearch</li>
+        <li><b>"index"</b>: elastic index to query for</li> 
+        <li><b>"body"</b>: JSON Format, wins over query</li>
+        <li><b>"timerangeFrom"</b>: if using body, defines the "from"</li>
+        <li><b>"timerangeTo"</b>: if using body, defines the "from"</li>
+        <li><b>"outputalways"</b>: output payload, even if the returned value length is 0 </li>
+        <li><b>"function"</b>: do some formating for the output message. javscript function, handlebars is supported</li>
+        <li><b>"Check every"</b>: how often elasticsearch is checked for new results</li>
+    </ul>
 </script>

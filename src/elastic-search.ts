@@ -136,7 +136,6 @@ module.exports = function (RED: Red) {
             }
 
             if (node.body) {
-                //@ts-ignore
                 let query = JSON.parse(node.body);
                 if (msg.payload.body) {
                     query = `*${msg.payload.body}*`;
@@ -156,16 +155,12 @@ module.exports = function (RED: Red) {
                 size: msg.payload.size || node.size || 10
             }
 
-            if (node.query) {
+            if (node.body) {
+                options.body = {
+                    query: elastic_query
+                }
+            } else if (node.query) {
                 options.q = node.query;
-                options.body = {
-                    query: elastic_query
-                }
-            }
-            else if (node.body) {
-                options.body = {
-                    query: elastic_query
-                }
             }
 
             const body = await node.config.client.search<SearchResponse<any>>(options)
@@ -182,7 +177,8 @@ module.exports = function (RED: Red) {
             if (node.outputalways || body.body.hits.total.value > 0)
                 msg.payload = {
                     index: node.index,
-                    query: node.body,
+                    body: node.body,
+                    query: node.query,
                     //@ts-ignore
                     total: body.body.hits.total.value,
                     items: hits
