@@ -29,7 +29,8 @@
       "elastic-config": "dist/elastic-config.js",
       "elastic-search": "dist/elastic-search.js",
       "elastic-ping": "dist/elastic-ping.js",
-      "elastic-indices": "dist/elastic-indices.js"
+      "elastic-indices": "dist/elastic-indices.js",
+      "elastic-ingest-node-pipelines": "dist/elastic-ingest-node-pipelines.js"
     }
   },
   "repository": {

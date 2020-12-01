@@ -1,0 +1,48 @@
+<script type="text/javascript">
+    RED
+        .nodes
+        .registerType('elastic-ingest-node-pipelines', {
+            category: 'elasticsearch',
+            defaults: {
+                confignode: {
+                    value: "",
+                    type: "elastic-config",
+                    required: true
+                },                          
+            },
+            inputs: 1,
+            outputs: 1,
+            color: "#FFFFFF",
+            label: function () {
+                if (this.name) {
+                    return this.name;
+                } else if (this.confignode.name) {
+                    return this.confignode.name;
+                }
+                return "elastic ingest node pipelines";
+            },
+            icon: "elasticsearch.png",
+            paletteLabel: "ingest node pipelines",
+            oneditprepare: function () {
+                var node = this;
+
+                $('#node-input-confignode').change(function () {
+                    var config = $('#node-input-confignode').val()
+                    node.confignode = config;
+                });
+            }
+        });
+</script>
+
+<script type="text/x-red" data-template-name="elastic-ingest-node-pipelines">
+    <div class="form-row">
+        <label for="node-input-confignode"><i class="fa fa-globe"></i> <span>Config</span></label>
+        <input type="text" id="node-input-confignode">
+    </div>  
+    
+   
+</script>
+
+<script type="text/x-red" data-help-name="elastic-ingest-node-pipelines">
+
+</script>
