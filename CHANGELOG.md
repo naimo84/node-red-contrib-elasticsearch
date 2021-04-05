@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/naimo84/node-red-contrib-elasticsearch/compare/v0.0.2...v0.0.3) (2021-04-05)
+
+
+### Features
+
+* ingest node pipelines ([eecc053](https://github.com/naimo84/node-red-contrib-elasticsearch/commit/eecc0533fc917efacfca4d3875d0b539a1f66f2d))
+* move user and password to credentials ([e0ef303](https://github.com/naimo84/node-red-contrib-elasticsearch/commit/e0ef3039b7efd9ae5a302f01e1a0388617a10738))
+* timerangeProperty ([7006fba](https://github.com/naimo84/node-red-contrib-elasticsearch/commit/7006fba75f423e558c678a976055e99568b89e0a))
+
+
+### Bug Fixes
+
+* small  bugfix for emtpy body/query ([6bcc6f5](https://github.com/naimo84/node-red-contrib-elasticsearch/commit/6bcc6f53236a3e895cdfd52883a6328f88e4d9a7))
+
 ### 0.0.2 (2020-11-26)
 
 
