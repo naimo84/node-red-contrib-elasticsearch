@@ -24,6 +24,7 @@
                 size: {
                     value: ""
                 },
+                timerangeProperty: {},
                 timerangeFrom: {
                     value: ""
                 },
@@ -181,6 +182,10 @@
         <label for="node-input-timerangeFrom"><i class="fa fa-clock-o"></i> <span>Time range</span></label>
         <input type="text" id="node-input-timerangeFrom" style="width:100px" placeholder="now-1h"> - <input type="text" id="node-input-timerangeTo"  style="width:100px" placeholder="now">        
     </div> 
+    <div class="form-row elastic">
+        <label for="node-input-timerangeProperty"><i class="fa fa-globe"></i> <span>Time range property</span></label>
+        <input type="text" id="node-input-timerangeProperty" placeholder="@timestamp">        
+    </div>  
     <div class="form-row elastic" id="delay-details-for">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span>Check every</span></label>
         <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">

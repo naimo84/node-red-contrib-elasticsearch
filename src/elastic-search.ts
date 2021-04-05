@@ -4,6 +4,7 @@ import { createSandbox, sendResults } from './sandbox';
 import { CronJob } from 'cron';
 import { ElasticNode } from './elastic-config';
 export interface ElasticSearchNode extends ElasticNode {
+    timerangeProperty: any;
     timerangeFrom: any;
     timerangeTo: any;
     query(query: any);
@@ -73,12 +74,13 @@ module.exports = function (RED: Red) {
         let node = this;
 
         node.config = configNode;
-        node.body =  config.body && config.body !== "" ? config.body : undefined;
+        node.body = config.body && config.body !== "" ? config.body : undefined;
         node.query = config.query && config.query !== "" ? config.query : undefined;
         node.index = config.index;
         node.outputalways = config.outputalways;
         node.size = config.size;
         node.timerangeFrom = config.timerangeFrom || 'now-1h';
+        node.timerangeProperty = config.timerangeProperty || '@timestamp';
         node.timerangeTo = config.timerangeTo || 'now';
         node.func = config.func;
 
@@ -125,12 +127,13 @@ module.exports = function (RED: Red) {
                 bool: {
                     must: [
                         {
-                            range: {
-                                "@timestamp": {
-                                    gte: node.timerangeFrom,
-                                    lte: node.timerangeTo
+                            range: JSON.parse(`{
+                                
+                                "${node.timerangeProperty}": {
+                                    "gte": "${node.timerangeFrom}",
+                                    "lte": "${node.timerangeTo}"
                                 }
-                            }
+                            }`)
                         }]
                 }
             }
@@ -140,15 +143,7 @@ module.exports = function (RED: Red) {
                 if (msg.payload.body) {
                     query = `*${msg.payload.body}*`;
                 }
-                if (JSON.stringify(query).includes("wildcard")) {
-                    elastic_query.bool.must.push(query)
-                } else {
-                    elastic_query.bool.must.push({
-                        // @ts-ignore
-                        wildcard: query
-                    })
-
-                }
+                elastic_query.bool.must.push(query)
             }
             let options: any = {
                 index: node.index,
@@ -162,7 +157,6 @@ module.exports = function (RED: Red) {
             } else if (node.query) {
                 options.q = node.query;
             }
-
             const body = await node.config.client.search<SearchResponse<any>>(options)
             let hits = [];
             if (body && body.body.hits) {
